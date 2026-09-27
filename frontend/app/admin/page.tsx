@@ -1,0 +1,4 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { api, user } from '../../lib/api';
+export default function Admin(){const [items,setItems]=useState<any[]>([]);const [error,setError]=useState('');useEffect(()=>{if(user()?.role!=='admin'){setError('Admin access required.');return}api('/admin/posters').then(setItems).catch(e=>setError(e.message))},[]);return <main className="section"><div className="container"><div className="eyebrow">Admin</div><h2>Moderation queue</h2><p className="muted">Flagged poster requests that require review before public use.</p>{error&&<div className="error">{error}</div>}{items.map(p=><div className="card" key={p._id} style={{margin:'14px 0'}}><strong>{p.formData?.headline}</strong><div className="muted">{p.moderation?.reasons?.join(', ')}</div></div>)}{!error&&!items.length&&<div className="empty">No flagged posters.</div>}</div></main>}
